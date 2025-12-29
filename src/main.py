@@ -1,19 +1,17 @@
 import time
-import json
 from watchdog.observers import Observer
 
 # utils
 import utils.helper.os_tooler as os_tooler
-from utils.watchdog.handler import MoverHandler
 import utils.scheduler.index as scheduler
+from utils.helper.config import ConfigManager
+from utils.watchdog.handler import MoverHandler
 
 config = None
 
 if __name__ == "__main__":
-
     # Load config
-    with open('config.json', 'r') as file:
-        config = json.load(file)
+    config = ConfigManager().get_config()
     source_dir = config["watchdog"]["source_dir"]
     foldername_map_path = config["watchdog"]["foldername_map_path"]
 
