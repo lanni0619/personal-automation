@@ -7,6 +7,9 @@ import schedule
 def example_job():
     print("I'm working on a scheduled task!")
 
+def clean_old_files(days=30):
+    pass
+
 # Format: (time interval, unit, job)
 JOBS_CONFIG = [(3, "seconds", example_job)]
 

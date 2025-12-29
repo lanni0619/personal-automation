@@ -1,0 +1,12 @@
+{
+    "watchdog": {
+        "source_dir": "C://Users/parktron/Downloads",
+        "foldername_map_path": {
+            "image": "C://Users/parktron/Downloads/images",
+            "app": "C://Users/parktron/Downloads/apps",
+            "archiver": "C://Users/parktron/Downloads/archiver",
+            "pdf": "C://Users/parktron/Downloads/pdf",
+            "excel": "C://Users/parktron/Downloads/excel"
+        }
+    }
+}

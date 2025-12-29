@@ -1,4 +1,5 @@
 import time
+import json
 from watchdog.observers import Observer
 
 # utils
@@ -6,25 +7,24 @@ import utils.helper.os_tooler as os_tooler
 from utils.watchdog.handler import MoverHandler
 import utils.scheduler.index as scheduler
 
+config = None
+
 if __name__ == "__main__":
 
-    source_dir = r"C:\Users\parktron\Downloads"
-    foldername_map_path = {
-        "image": r"C:\Users\parktron\Downloads\images",
-        "app": r"C:\Users\parktron\Downloads\apps",
-        "archiver": r"C:\Users\parktron\Downloads\archiver",
-        "pdf": r"C:\Users\parktron\Downloads\pdf",
-        "excel": r"C:\Users\parktron\Downloads\excel",
-    }
+    # Load config
+    with open('config.json', 'r') as file:
+        config = json.load(file)
+    source_dir = config["watchdog"]["source_dir"]
+    foldername_map_path = config["watchdog"]["foldername_map_path"]
 
     # Start scheduler
     scheduler.start_scheduler()
 
-    # Prepare Watchdog
+    # Prepare watchdog
     os_tooler.make_folder(foldername_map_path)
     event_handler = MoverHandler(source_dir, foldername_map_path)
 
-    # Start Watchdog
+    # Start watchdog
     observer = Observer()
     observer.schedule(event_handler, source_dir, recursive=True)
     observer.start()
