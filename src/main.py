@@ -6,8 +6,10 @@ import helper.os_tooler as os_tooler
 import dep.scheduler as scheduler
 from helper.config import ConfigManager
 from dep.watchdog_handler import MoverHandler
+from dep.logger import get_logger
 
 config = None
+logger = get_logger(__name__)
 
 if __name__ == "__main__":
     # Load config
@@ -27,14 +29,15 @@ if __name__ == "__main__":
     observer.schedule(event_handler, source_dir, recursive=True)
     observer.start()
 
-    print("🚀 Watchdog listening...:", source_dir)
+    logger.info("🚀 Watchdog listening...: " + source_dir)
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
-        print("\n🛑 Watchdog stop to listen...")
+        logger.error("Watchdog stop to listen...")
     except Exception as e:
-        print("Unexpected error", e)
+        logger.error("🛑 Unexpected error", e)
+
     observer.join()

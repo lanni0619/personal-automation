@@ -1,18 +1,34 @@
 import threading
 import time
 import schedule
+import os
 from helper.config import ConfigManager
+from dep.logger import get_logger
+
+logger = get_logger(__name__)
 
 # --- JOB FUNCTION & CONFIG ---
-def example_job():
-    print("I'm working on a scheduled task!")
+def heartbeat():
+    logger.info("[scheduler][heartbeat] scheduler is running")
 
 def clean_old_files(days=30):
+
+    logger.info("[scheduler][clean_old_files] start...")
+
     download_dir = ConfigManager().config["download_dir"]
-    print(download_dir)
+    cutoff_time = 60 * 60 * 24 * days # sec
+    now = time.time()
+    for dirpath, dirnames, filenames in os.walk(download_dir):
+        for file in filenames:
+            file_path = os.path.join(dirpath, file)
+            access_time = os.stat(file_path).st_atime
+            if now - access_time > cutoff_time:
+                os.remove(file_path)
+
+    logger.info("[scheduler][clean_old_files] success to execute")
 
 # Format: (time interval, unit, job)
-JOBS_CONFIG = [(3, "seconds", example_job)]
+JOBS_CONFIG = [(30, "seconds", heartbeat), (1, "days", clean_old_files)]
 
 # --- CORE SCHEDULE LOGIC ---
 def _run_threaded(job_func):
@@ -39,14 +55,13 @@ def start_scheduler():
     scheduler_thread = threading.Thread(target=_scheduler_loop, name="Scheduler_Loop")
     scheduler_thread.daemon = True  # 設定為 Daemon，主程式結束時它會自動結束
     scheduler_thread.start()
-    print("✅ Scheduler service started in background.")
+    logger.info("✅ Scheduler service started in background.")
 
 if __name__ == "__main__":
-    clean_old_files()
-    # start_scheduler()
-    # try:
-    #     while True:
-    #         time.sleep(1)
-    # except KeyboardInterrupt:
-    #     print("exit!")
-    #     exit(0)
+    start_scheduler()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        logger.info("exit!")
+        exit(0)
