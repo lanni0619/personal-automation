@@ -18,17 +18,25 @@ def clean_old_files(days=30):
     download_dir = ConfigManager().config["download_dir"]
     cutoff_time = 60 * 60 * 24 * days # sec
     now = time.time()
+    rm_list = []
+
     for dirpath, dirnames, filenames in os.walk(download_dir):
         for file in filenames:
             file_path = os.path.join(dirpath, file)
             access_time = os.stat(file_path).st_atime
             if now - access_time > cutoff_time:
+                rm_list.append(file)
                 os.remove(file_path)
 
-    logger.info("[scheduler][clean_old_files] success to execute")
+    if len(rm_list) == 0:
+        msg = "All files are survived"
+    else:
+        msg = "remove list: " + str(rm_list)
+
+    logger.info(f"[scheduler][clean_old_files] {msg}")
 
 # Format: (time interval, unit, job)
-JOBS_CONFIG = [(30, "seconds", heartbeat), (1, "days", clean_old_files)]
+JOBS_CONFIG = [(30, "seconds", heartbeat), (60, "seconds", clean_old_files)]    
 
 # --- CORE SCHEDULE LOGIC ---
 def _run_threaded(job_func):
