@@ -2,7 +2,9 @@ import os
 import shutil
 import uuid
 from watchdog.events import FileSystemEventHandler
+from dep.logger import get_logger
 
+logger = get_logger(__name__)
 class MoverHandler(FileSystemEventHandler):
     def __init__(self, source_dir, foldername_map_path):
         self.source_dir = source_dir
@@ -31,12 +33,19 @@ class MoverHandler(FileSystemEventHandler):
                     self.__move_file(dest, entry, name)
 
     def __move_file(self, dest, entry, name):
+
+
         src_path = entry.path
         dest_path = f"{dest}/{name}"
         if os.path.exists(dest_path):
             unique_name = self.__make_unique(name)
             dest_path = f"{dest}/{unique_name}"
+        
+        logger.info(f"__move_file - src={src_path}, dest={dest_path}")
+        
         shutil.move(src_path, dest_path)
+
+        logger.info("__move_file - end")
 
     def __make_unique(self, origin_name):
         name, ext = os.path.splitext(origin_name)

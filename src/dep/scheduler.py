@@ -9,11 +9,11 @@ logger = get_logger(__name__)
 
 # --- JOB FUNCTION & CONFIG ---
 def heartbeat():
-    logger.info("[scheduler][heartbeat] scheduler is running")
+    logger.info("heartbeat - scheduler is running")
 
 def clean_old_files(days=30):
 
-    logger.info("[scheduler][clean_old_files] start...")
+    logger.info("clean_old_files - start")
 
     download_dir = ConfigManager().config["download_dir"]
     cutoff_time = 60 * 60 * 24 * days # sec
@@ -33,10 +33,10 @@ def clean_old_files(days=30):
     else:
         msg = "remove list: " + str(rm_list)
 
-    logger.info(f"[scheduler][clean_old_files] {msg}")
+    logger.info(f"clean_old_files - {msg}")
 
 # Format: (time interval, unit, job)
-JOBS_CONFIG = [(30, "seconds", heartbeat), (60, "seconds", clean_old_files)]    
+JOBS_CONFIG = [(30, "seconds", heartbeat), (1, "hours", clean_old_files)]    
 
 # --- CORE SCHEDULE LOGIC ---
 def _run_threaded(job_func):
@@ -63,7 +63,7 @@ def start_scheduler():
     scheduler_thread = threading.Thread(target=_scheduler_loop, name="Scheduler_Loop")
     scheduler_thread.daemon = True  # 設定為 Daemon，主程式結束時它會自動結束
     scheduler_thread.start()
-    logger.info("✅ Scheduler service started in background.")
+    logger.info("✅ start_scheduler - start")
 
 if __name__ == "__main__":
     start_scheduler()

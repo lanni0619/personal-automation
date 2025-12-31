@@ -8,7 +8,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 
 LOG_FILE = os.path.join(LOG_DIR, f"{datetime.now().strftime('%Y-%m-%d')}.log")
 
-LOG_FORMAT = "[%(asctime)s] [%(levelname)s] %(name)s: %(message)s"
+LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(name)s]: %(message)s"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 # Example usage:
