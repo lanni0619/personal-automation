@@ -2,17 +2,17 @@ import time
 from watchdog.observers import Observer
 
 # utils
-import utils.helper.os_tooler as os_tooler
-import utils.scheduler.index as scheduler
-from utils.helper.config import ConfigManager
-from utils.watchdog.handler import MoverHandler
+import helper.os_tooler as os_tooler
+import dep.scheduler as scheduler
+from helper.config import ConfigManager
+from dep.watchdog_handler import MoverHandler
 
 config = None
 
 if __name__ == "__main__":
     # Load config
-    config = ConfigManager().get_config()
-    source_dir = config["watchdog"]["source_dir"]
+    config = ConfigManager().config
+    source_dir = config["download_dir"]
     foldername_map_path = config["watchdog"]["foldername_map_path"]
 
     # Start scheduler

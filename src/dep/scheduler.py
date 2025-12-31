@@ -1,14 +1,15 @@
 import threading
 import time
 import schedule
-
+from helper.config import ConfigManager
 
 # --- JOB FUNCTION & CONFIG ---
 def example_job():
     print("I'm working on a scheduled task!")
 
 def clean_old_files(days=30):
-    pass
+    download_dir = ConfigManager().config["download_dir"]
+    print(download_dir)
 
 # Format: (time interval, unit, job)
 JOBS_CONFIG = [(3, "seconds", example_job)]
@@ -41,10 +42,11 @@ def start_scheduler():
     print("✅ Scheduler service started in background.")
 
 if __name__ == "__main__":
-    start_scheduler()
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("exit!")
-        exit(0)
+    clean_old_files()
+    # start_scheduler()
+    # try:
+    #     while True:
+    #         time.sleep(1)
+    # except KeyboardInterrupt:
+    #     print("exit!")
+    #     exit(0)
